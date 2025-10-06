@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    image: ${DOCKER_USERNAME:-yourdockername}/nodejs-cicd-sample:latest
+    container_name: nodejs-cicd-sample
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: always
