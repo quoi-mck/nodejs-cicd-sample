@@ -32,7 +32,8 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
         run: |
-          docker buildx build -t ${{ secrets.DOCKER_USERNAME }}/nodejs-cicd-sample:latest . --load
+          echo "🔧 Building and pushing Docker image..."
+          docker buildx build --platform linux/amd64 -t ${{ secrets.DOCKER_USERNAME }}/nodejs-cicd-sample:latest . --load
           docker push ${{ secrets.DOCKER_USERNAME }}/nodejs-cicd-sample:latest
 
       - name: Deploy to server via SSH
