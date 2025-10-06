@@ -31,10 +31,12 @@ jobs:
       - name: Build and push
         env:
           DOCKER_BUILDKIT: 1
+          USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           echo "🔧 Building and pushing Docker image..."
-          docker buildx build --platform linux/amd64 -t ${{ secrets.DOCKER_USERNAME }}/nodejs-cicd-sample:latest . --load
-          docker push ${{ secrets.DOCKER_USERNAME }}/nodejs-cicd-sample:latest
+          IMAGE_NAME="$USERNAME/nodejs-cicd-sample:latest"
+          docker buildx build --platform linux/amd64 -t $IMAGE_NAME . --load
+          docker push $IMAGE_NAME
 
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v1.0.3
