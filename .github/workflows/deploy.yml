@@ -35,8 +35,11 @@ jobs:
         run: |
           echo "🔧 Building and pushing Docker image..."
           IMAGE_NAME="$USERNAME/nodejs-cicd-sample:latest"
-          docker buildx build --platform linux/amd64 -t $IMAGE_NAME . --load
-          docker push $IMAGE_NAME
+
+          docker buildx create --use --name mybuilder || docker buildx use mybuilder
+          docker buildx inspect --bootstrap
+
+          docker buildx build --platform linux/amd64 -t $IMAGE_NAME . --push
 
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v1.0.3
