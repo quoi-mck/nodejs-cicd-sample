@@ -17,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ Thiết lập QEMU (để hỗ trợ build đa nền tảng)
+      # 2️⃣ Thiết lập QEMU (hỗ trợ build đa nền tảng)
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -39,11 +39,15 @@ jobs:
       - name: Build and push Docker image
         env:
           DOCKER_BUILDKIT: 1
-          USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          RAW_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           echo "🔧 Building and pushing Docker image..."
+
+          # Xử lý lỗi xuống dòng trong secrets
+          USERNAME=$(echo "$RAW_USERNAME" | tr -d '\n' | tr -d '\r')
           IMAGE_NAME="${USERNAME}/nodejs-cicd-sample:latest"
-          echo "Building image: $IMAGE_NAME"
+
+          echo "🧱 Building image: $IMAGE_NAME"
 
           # Tạo builder nếu chưa có
           docker buildx create --use --name mybuilder || docker buildx use mybuilder
